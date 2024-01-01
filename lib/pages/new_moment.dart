@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:moment/assets/my_colors.dart';
+import '../util/my_colors.dart';
 import 'package:moment/model/moment.dart';
 
 import 'package:hive_flutter/hive_flutter.dart';

@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:moment/assets/my_colors.dart';
 
 import '../database/boxes.dart';
 import '../model/moment.dart';
+import '../util/my_colors.dart';
 
 class DetailMoment extends StatefulWidget {
   const DetailMoment({super.key});
