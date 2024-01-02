@@ -14,6 +14,9 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<Moment> moments = [];
   Box<Moment> momentBox = Boxes.getMomentBox();
+  late Moment moment;
+  late int index;
+
   @override
   void initState() {
     super.initState();
@@ -71,8 +74,8 @@ class _HomeState extends State<Home> {
                         color: MyColors.pallete4,
                       ),
                       onPressed: () {
-                        momentBox.delete(moments[index].id);
-                        _loadData();
+                        this.index = index;
+                        _showConfirmationDialog();
                       },
                     ),
                   ),
@@ -90,10 +93,43 @@ class _HomeState extends State<Home> {
           color: MyColors.textMain,
         ),
         onPressed: () async {
-          dynamic result = await Navigator.pushNamed(context, '/newMoment');
+          await Navigator.pushNamed(context, '/newMoment');
           _loadData();
         },
       ),
     );
+  }
+
+  Future<void> _showConfirmationDialog() async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirm Delete'),
+          content: Text('Do you want to delete this moment?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                _deleteMoment();
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _deleteMoment() {
+    // Implement your save logic here
+    momentBox.delete(moments[index].id);
+    _loadData();
   }
 }

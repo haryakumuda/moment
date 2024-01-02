@@ -132,9 +132,7 @@ class _DetailMomentState extends State<DetailMoment>
                       backgroundColor:
                           MaterialStatePropertyAll(MyColors.textMain)),
                   onPressed: () {
-                    receivedMoment?.latestUpdate = DateTime.now();
-                    receivedMoment?.dateList.add(DateTime.now());
-                    momentBox.put(receivedMoment?.id, receivedMoment!);
+                    _showConfirmationDialog();
                   },
                   child: Icon(Icons.refresh)),
               SizedBox(
@@ -152,5 +150,39 @@ class _DetailMomentState extends State<DetailMoment>
         ),
       ),
     );
+  }
+
+  Future<void> _showConfirmationDialog() async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirm Delete'),
+          content: Text('Are you sure want to reset?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                _resetDate();
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('Reset'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _resetDate() {
+    // Implement your save logic here
+    receivedMoment?.latestUpdate = DateTime.now();
+    receivedMoment?.dateList.add(DateTime.now());
+    momentBox.put(receivedMoment?.id, receivedMoment!);
   }
 }
