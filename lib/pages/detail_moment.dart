@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 
 import '../database/boxes.dart';
 import '../model/moment.dart';
@@ -92,37 +93,91 @@ class _DetailMomentState extends State<DetailMoment>
               SizedBox(
                 height: 50,
               ),
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  Column(
-                    children: [
-                      Text(
-                        "${days.toString()} days",
-                        style: TextStyle(
-                            color: MyColors.textMain,
-                            fontSize: 30,
-                            fontFamily: 'EspressoShow'),
-                      ),
-                      Text(
-                          style: TextStyle(color: MyColors.textMain),
-                          "${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}"),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 250,
-                    width: 250,
-                    child: CircularProgressIndicator(
-                      valueColor:
-                          AlwaysStoppedAnimation<Color>(MyColors.pallete2),
-                      backgroundColor: MyColors.pallete4,
-                      value: progress,
-                      semanticsLabel: 'Circular progress indicator',
-                      strokeWidth: 20,
-                      strokeCap: StrokeCap.round,
+              Expanded(
+                flex: 1,
+                child: PageView(
+                  children: [
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "${days.toString()} days",
+                              style: TextStyle(
+                                  color: MyColors.textMain,
+                                  fontSize: 30,
+                                  fontFamily: 'EspressoShow'),
+                            ),
+                            Text(
+                                style: TextStyle(color: MyColors.textMain),
+                                "${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}"),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 250,
+                          width: 250,
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                MyColors.pallete2),
+                            backgroundColor: MyColors.pallete4,
+                            value: progress,
+                            semanticsLabel: 'Circular progress indicator',
+                            strokeWidth: 20,
+                            strokeCap: StrokeCap.round,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+                    ListView.builder(
+                      itemBuilder: (context, index) {
+                        int reversedIndex =
+                            receivedMoment!.dateList.length - 1 - index;
+
+                        DateTime date = receivedMoment!.dateList[reversedIndex];
+                        DateTime? dateBefore = reversedIndex > 0
+                            ? receivedMoment!.dateList[reversedIndex - 1]
+                            : date;
+
+                        Duration timePassed = date.difference(dateBefore);
+
+                        DateFormat formatter =
+                            DateFormat('yyyy-MM-dd HH:mm:ss');
+
+                        String formattedDate = formatter.format(date);
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 1, horizontal: 4),
+                          child: Card(
+                            color: MyColors.pallete1,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                ListTile(
+                                  style: ListTileStyle.list,
+                                  onTap: () {},
+                                  title: Text(
+                                    formattedDate,
+                                    style: TextStyle(color: MyColors.textMain),
+                                  ),
+                                  subtitle: Text(
+                                    "${timePassed.inDays.toString()} Days, ${(timePassed.inHours % 24).toString()} Hours, ${(timePassed.inMinutes % 60).toString()} Minutes, ${(timePassed.inSeconds % 60).toString()} Seconds",
+                                    style: TextStyle(color: MyColors.textMain),
+                                  ),
+                                  leading: null,
+                                  trailing: null,
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      itemCount: receivedMoment?.dateList.length,
+                    ),
+                  ],
+                ),
               ),
               SizedBox(
                 height: 50,
