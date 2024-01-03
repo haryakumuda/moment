@@ -58,7 +58,6 @@ class _DetailMomentState extends State<DetailMoment>
 
   @override
   Widget build(BuildContext context) {
-    print('BUILD IS STARTING');
     Map<String, dynamic>? arguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
     receivedMoment = arguments?['moment'];
@@ -144,7 +143,7 @@ class _DetailMomentState extends State<DetailMoment>
                         Duration timePassed = date.difference(dateBefore);
 
                         DateFormat formatter =
-                            DateFormat('yyyy-MM-dd HH:mm:ss');
+                            DateFormat('E, d MMM yyyy HH:mm');
 
                         String formattedDate = formatter.format(date);
                         return Padding(
@@ -159,11 +158,12 @@ class _DetailMomentState extends State<DetailMoment>
                                   style: ListTileStyle.list,
                                   onTap: () {},
                                   title: Text(
-                                    formattedDate,
-                                    style: TextStyle(color: MyColors.textMain),
+                                    "${timePassed.inDays.toString()} Days, ${(timePassed.inHours % 24).toString()} Hours, ${(timePassed.inMinutes % 60).toString()} Minutes, ${(timePassed.inSeconds % 60).toString()} Seconds",
+                                    style: TextStyle(
+                                        color: MyColors.textMain, fontSize: 16),
                                   ),
                                   subtitle: Text(
-                                    "${timePassed.inDays.toString()} Days, ${(timePassed.inHours % 24).toString()} Hours, ${(timePassed.inMinutes % 60).toString()} Minutes, ${(timePassed.inSeconds % 60).toString()} Seconds",
+                                    formattedDate,
                                     style: TextStyle(color: MyColors.textMain),
                                   ),
                                   leading: null,
