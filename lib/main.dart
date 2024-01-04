@@ -4,6 +4,8 @@ import 'package:moment/pages/detail_moment.dart';
 import 'package:moment/pages/home.dart';
 import 'package:moment/pages/new_moment.dart';
 
+import 'pages/about.dart';
+
 void main() async {
   // Init Hive
   await Boxes.init();
@@ -14,6 +16,7 @@ void main() async {
       '/home': (context) => Home(),
       '/detailMoment': (context) => DetailMoment(),
       '/newMoment': (context) => NewMoment(),
+      '/about': (context) => About(),
     },
   ));
 }

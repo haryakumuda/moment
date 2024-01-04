@@ -35,6 +35,44 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: MyColors.background,
       appBar: AppBar(
+        actions: [
+          PopupMenuButton<String>(
+            icon: Icon(
+              Icons.more_vert,
+              color: MyColors.textMain,
+            ), // 3-dots icon
+            onSelected: (String result) {
+              // Handle the selected option
+              if (result == 'option1') {
+                Navigator.pushNamed(context, '/about');
+              } else if (result == 'option2') {
+                final snackBar = SnackBar(
+                  content: Text("Thanks, but I don't need it!"),
+                  duration: Duration(seconds: 2),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
+              // Add more conditions for other options
+            },
+            itemBuilder: (BuildContext context) => [
+              PopupMenuItem<String>(
+                value: 'option1',
+                child:
+                    Text('About', style: TextStyle(color: MyColors.textMain)),
+              ),
+              PopupMenuItem<String>(
+                value: 'option2',
+                child: Text(
+                  'Donate',
+                  style: TextStyle(color: MyColors.textMain),
+                ),
+              ),
+              // Add more PopupMenuItem widgets for additional options
+            ],
+            color: MyColors.background,
+          ),
+        ],
+        toolbarOpacity: 0.5,
         title: Text(
           "Moment App",
           style: TextStyle(color: MyColors.textMain),
