@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
+
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 
@@ -130,6 +132,33 @@ class _DetailMomentState extends State<DetailMoment>
                         ),
                       ],
                     ),
+                    HeatMap(
+                      datasets: mapDateTimeColor(receivedMoment!.dateList),
+                      startDate: DateTime.now().add(Duration(days: -90)),
+                      endDate: DateTime.now(),
+                      defaultColor: Colors.grey,
+                      colorMode: ColorMode.opacity,
+                      textColor: Colors.white,
+                      colorTipCount: 5,
+                      fontSize: 10,
+                      showText: true,
+                      showColorTip: false,
+                      scrollable: true,
+                      borderRadius: 4.0,
+                      colorsets: {
+                        1: MyColors.appBar,
+                        // 3: Colors.orange,
+                        // 5: Colors.yellow,
+                        // 7: Colors.green,
+                        // 9: Colors.blue,
+                        // 11: Colors.indigo,
+                        // 13: Colors.purple,
+                      },
+                      onClick: (value) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(value.toString())));
+                      },
+                    ),
                     ListView.builder(
                       itemBuilder: (context, index) {
                         int reversedIndex =
@@ -239,5 +268,18 @@ class _DetailMomentState extends State<DetailMoment>
     receivedMoment?.latestUpdate = DateTime.now();
     receivedMoment?.dateList.add(DateTime.now());
     momentBox.put(receivedMoment?.id, receivedMoment!);
+  }
+
+  Map<DateTime, int> mapDateTimeColor(List<DateTime> dateTime) {
+    Map<DateTime, int> mapDateTime = {};
+    for (DateTime e in dateTime) {
+      DateTime newDateTime = DateTime(e.year, e.month, e.day);
+      if (mapDateTime.containsKey(newDateTime)) {
+        mapDateTime[newDateTime] = (mapDateTime[newDateTime]! + 1);
+      } else
+        mapDateTime[newDateTime] = 1;
+    }
+
+    return mapDateTime;
   }
 }
