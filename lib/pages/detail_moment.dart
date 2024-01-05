@@ -175,6 +175,10 @@ class _DetailMomentState extends State<DetailMoment>
                             DateFormat('E, d MMM yyyy HH:mm');
 
                         String formattedDate = formatter.format(date);
+
+                        bool isFirstIndex =
+                            index == receivedMoment!.dateList.length - 1;
+
                         return Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 1, horizontal: 4),
@@ -186,11 +190,21 @@ class _DetailMomentState extends State<DetailMoment>
                                 ListTile(
                                   style: ListTileStyle.list,
                                   onTap: () {},
-                                  title: Text(
-                                    "${timePassed.inDays.toString()} Days, ${(timePassed.inHours % 24).toString()} Hours, ${(timePassed.inMinutes % 60).toString()} Minutes, ${(timePassed.inSeconds % 60).toString()} Seconds",
-                                    style: TextStyle(
-                                        color: MyColors.textMain, fontSize: 16),
-                                  ),
+                                  title: isFirstIndex
+                                      ? Text(
+                                          "Start",
+                                          style: TextStyle(
+                                            color: MyColors.textMain,
+                                            fontSize: 16,
+                                          ),
+                                        )
+                                      : Text(
+                                          "${timePassed.inDays.toString()} Days, ${(timePassed.inHours % 24).toString()} Hours, ${(timePassed.inMinutes % 60).toString()} Minutes, ${(timePassed.inSeconds % 60).toString()} Seconds",
+                                          style: TextStyle(
+                                            color: MyColors.textMain,
+                                            fontSize: 16,
+                                          ),
+                                        ),
                                   subtitle: Text(
                                     formattedDate,
                                     style: TextStyle(color: MyColors.textMain),

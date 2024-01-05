@@ -27,7 +27,12 @@ class _NewMomentState extends State<NewMoment> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: _onWillPop,
+      onWillPop: () async {
+        if (title == "" && description == "") {
+          return true;
+        }
+        return await _onWillPop(); // Allow the user to pop the screen if there are changes
+      },
       child: Scaffold(
           backgroundColor: MyColors.background,
           appBar: AppBar(
