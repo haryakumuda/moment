@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:moment/database/boxes.dart';
 import 'package:moment/pages/detail_moment.dart';
@@ -19,7 +17,6 @@ void main() async {
       '/detailMoment': (context) => DetailMoment(),
       '/newMoment': (context) => NewMoment(),
       '/about': (context) => About(),
-      '/nothing': (context) => About(),
     },
   ));
 }
