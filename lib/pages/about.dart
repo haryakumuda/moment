@@ -43,6 +43,7 @@ class _AboutState extends State<About> {
           style: TextStyle(color: MyColors.textMain),
         ),
         backgroundColor: MyColors.appBar,
+        foregroundColor: MyColors.textMain,
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),

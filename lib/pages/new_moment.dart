@@ -41,6 +41,7 @@ class _NewMomentState extends State<NewMoment> {
               style: TextStyle(color: MyColors.textMain),
             ),
             backgroundColor: MyColors.appBar,
+            foregroundColor: MyColors.textMain,
           ),
           body: Padding(
             padding: const EdgeInsets.all(15.0),

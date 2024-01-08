@@ -78,6 +78,7 @@ class _HomeState extends State<Home> {
           style: TextStyle(color: MyColors.textMain),
         ),
         backgroundColor: MyColors.appBar,
+        foregroundColor: MyColors.textMain,
       ),
       body: ListView.builder(
         itemBuilder: (context, index) {

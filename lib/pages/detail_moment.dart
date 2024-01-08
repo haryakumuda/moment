@@ -78,6 +78,7 @@ class _DetailMomentState extends State<DetailMoment>
           receivedMoment!.title,
           style: TextStyle(color: MyColors.textMain),
         ),
+        foregroundColor: MyColors.textMain,
         backgroundColor: MyColors.appBar,
       ),
       body: Padding(
