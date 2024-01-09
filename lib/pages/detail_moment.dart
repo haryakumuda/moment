@@ -99,126 +99,44 @@ class _DetailMomentState extends State<DetailMoment>
                 flex: 1,
                 child: PageView(
                   children: [
-                    Stack(
-                      alignment: Alignment.center,
+                    Column(
                       children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              "${days.toString()} days",
-                              style: TextStyle(
-                                  color: MyColors.textMain,
-                                  fontSize: 30,
-                                  fontFamily: 'EspressoShow'),
-                            ),
-                            Text(
-                                style: TextStyle(color: MyColors.textMain),
-                                "${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}"),
-                          ],
+                        Text(
+                          'Counter',
+                          style:
+                              TextStyle(color: MyColors.textMain, fontSize: 25),
                         ),
                         SizedBox(
-                          height: 250,
-                          width: 250,
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                MyColors.pallete2),
-                            backgroundColor: MyColors.pallete4,
-                            value: progress,
-                            semanticsLabel: 'Circular progress indicator',
-                            strokeWidth: 20,
-                            strokeCap: StrokeCap.round,
-                          ),
+                          height: 50,
                         ),
+                        widgetDaysCount(),
                       ],
                     ),
-                    HeatMap(
-                      datasets: mapDateTimeColor(receivedMoment!.dateList),
-                      startDate: DateTime.now().add(Duration(days: -90)),
-                      endDate: DateTime.now(),
-                      defaultColor: Colors.grey,
-                      colorMode: ColorMode.opacity,
-                      textColor: Colors.white,
-                      colorTipCount: 5,
-                      fontSize: 10,
-                      showText: true,
-                      showColorTip: false,
-                      scrollable: true,
-                      borderRadius: 4.0,
-                      colorsets: {
-                        1: MyColors.appBar,
-                        // 3: Colors.orange,
-                        // 5: Colors.yellow,
-                        // 7: Colors.green,
-                        // 9: Colors.blue,
-                        // 11: Colors.indigo,
-                        // 13: Colors.purple,
-                      },
-                      onClick: (value) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(value.toString())));
-                      },
+                    Column(
+                      children: [
+                        Text(
+                          'Statistic',
+                          style:
+                              TextStyle(color: MyColors.textMain, fontSize: 25),
+                        ),
+                        SizedBox(
+                          height: 25,
+                        ),
+                        widgetHeatMap(),
+                      ],
                     ),
-                    ListView.builder(
-                      itemBuilder: (context, index) {
-                        int reversedIndex =
-                            receivedMoment!.dateList.length - 1 - index;
-
-                        DateTime date = receivedMoment!.dateList[reversedIndex];
-                        DateTime? dateBefore = reversedIndex > 0
-                            ? receivedMoment!.dateList[reversedIndex - 1]
-                            : date;
-
-                        Duration timePassed = date.difference(dateBefore);
-
-                        DateFormat formatter =
-                            DateFormat('E, d MMM yyyy HH:mm');
-
-                        String formattedDate = formatter.format(date);
-
-                        bool isFirstIndex =
-                            index == receivedMoment!.dateList.length - 1;
-
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 1, horizontal: 4),
-                          child: Card(
-                            color: MyColors.pallete1,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                ListTile(
-                                  style: ListTileStyle.list,
-                                  onTap: () {},
-                                  title: isFirstIndex
-                                      ? Text(
-                                          "Start",
-                                          style: TextStyle(
-                                            color: MyColors.textMain,
-                                            fontSize: 16,
-                                          ),
-                                        )
-                                      : Text(
-                                          "${timePassed.inDays.toString()} Days, ${(timePassed.inHours % 24).toString()} Hours, ${(timePassed.inMinutes % 60).toString()} Minutes, ${(timePassed.inSeconds % 60).toString()} Seconds",
-                                          style: TextStyle(
-                                            color: MyColors.textMain,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                  subtitle: Text(
-                                    formattedDate,
-                                    style: TextStyle(color: MyColors.textMain),
-                                  ),
-                                  leading: null,
-                                  trailing: null,
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                      itemCount: receivedMoment?.dateList.length,
+                    Column(
+                      children: [
+                        Text(
+                          'History',
+                          style:
+                              TextStyle(color: MyColors.textMain, fontSize: 25),
+                        ),
+                        SizedBox(
+                          height: 25,
+                        ),
+                        widgetDateList(),
+                      ],
                     ),
                   ],
                 ),
@@ -250,6 +168,136 @@ class _DetailMomentState extends State<DetailMoment>
       ),
     );
   }
+
+  /// =========================================== WIDGETS =========================================== ///
+  widgetDaysCount() {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              "${days.toString()} days",
+              style: TextStyle(
+                  color: MyColors.textMain,
+                  fontSize: 30,
+                  fontFamily: 'EspressoShow'),
+            ),
+            Text(
+                style: TextStyle(color: MyColors.textMain),
+                "${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}"),
+          ],
+        ),
+        SizedBox(
+          height: 250,
+          width: 250,
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(MyColors.pallete2),
+            backgroundColor: MyColors.pallete4,
+            value: progress,
+            semanticsLabel: 'Circular progress indicator',
+            strokeWidth: 20,
+            strokeCap: StrokeCap.round,
+          ),
+        ),
+      ],
+    );
+  }
+
+  widgetDateList() {
+    return Expanded(
+      child: ListView.builder(
+        itemBuilder: (context, index) {
+          int reversedIndex = receivedMoment!.dateList.length - 1 - index;
+
+          DateTime date = receivedMoment!.dateList[reversedIndex];
+          DateTime? dateBefore = reversedIndex > 0
+              ? receivedMoment!.dateList[reversedIndex - 1]
+              : date;
+
+          Duration timePassed = date.difference(dateBefore);
+
+          DateFormat formatter = DateFormat('E, d MMM yyyy HH:mm');
+
+          String formattedDate = formatter.format(date);
+
+          bool isFirstIndex = index == receivedMoment!.dateList.length - 1;
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 4),
+            child: Card(
+              color: MyColors.pallete1,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  ListTile(
+                    style: ListTileStyle.list,
+                    onTap: () {},
+                    title: isFirstIndex
+                        ? Text(
+                            "Start",
+                            style: TextStyle(
+                              color: MyColors.textMain,
+                              fontSize: 16,
+                            ),
+                          )
+                        : Text(
+                            "${timePassed.inDays.toString()} Days, ${(timePassed.inHours % 24).toString()} Hours, ${(timePassed.inMinutes % 60).toString()} Minutes, ${(timePassed.inSeconds % 60).toString()} Seconds",
+                            style: TextStyle(
+                              color: MyColors.textMain,
+                              fontSize: 16,
+                            ),
+                          ),
+                    subtitle: Text(
+                      formattedDate,
+                      style: TextStyle(color: MyColors.textMain),
+                    ),
+                    leading: null,
+                    trailing: null,
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+        itemCount: receivedMoment?.dateList.length,
+      ),
+    );
+  }
+
+  widgetHeatMap() {
+    return HeatMap(
+      datasets: mapDateTimeColor(receivedMoment!.dateList),
+      startDate: DateTime.now().add(Duration(days: -90)),
+      endDate: DateTime.now(),
+      defaultColor: Colors.grey,
+      colorMode: ColorMode.opacity,
+      textColor: Colors.white,
+      colorTipCount: 5,
+      fontSize: 10,
+      showText: true,
+      showColorTip: false,
+      scrollable: true,
+      borderRadius: 4.0,
+      colorsets: {
+        1: MyColors.appBar,
+        // 3: Colors.orange,
+        // 5: Colors.yellow,
+        // 7: Colors.green,
+        // 9: Colors.blue,
+        // 11: Colors.indigo,
+        // 13: Colors.purple,
+      },
+      onClick: (value) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(value.toString())));
+      },
+    );
+  }
+
+  /// =========================================== DIALOG
 
   Future<void> _showConfirmationDialog() async {
     return showDialog<void>(
