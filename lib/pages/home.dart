@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import '../database/sqflite_database.dart';
 import '../util/my_colors.dart';
-import '../database/boxes.dart';
 import '../model/moment.dart';
 
 class Home extends StatefulWidget {
@@ -12,22 +11,25 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  late DatabaseHelper databaseHelper; // Add this line
   List<Moment> moments = [];
-  Box<Moment> momentBox = Boxes.getMomentBox();
   late Moment moment;
   late int index;
 
   @override
   void initState() {
     super.initState();
+    databaseHelper = DatabaseHelper(); // Initialize your database helper
+
     _loadData();
   }
 
   Future<void> _loadData() async {
-    Box<Moment> momentBox = Boxes.getMomentBox();
+    List<Moment> loadedMoments = await databaseHelper.getAllMoments();
     setState(() {
-      moments = momentBox.values.toList();
+      moments = loadedMoments;
     });
+    print(moments.toString());
   }
 
   @override
@@ -80,51 +82,59 @@ class _HomeState extends State<Home> {
         backgroundColor: MyColors.appBar,
         foregroundColor: MyColors.textMain,
       ),
-      body: ListView.builder(
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 4),
-            child: Card(
-              color: MyColors.pallete1,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  ListTile(
-                    style: ListTileStyle.list,
-                    onTap: () {
-                      Navigator.pushNamed(context, '/detailMoment',
-                          arguments: {'moment': moments[index]});
-                    },
-                    title: Text(
-                      moments[index].title,
-                      style: TextStyle(color: MyColors.textMain),
-                    ),
-                    subtitle: Text(
-                      moments[index].description,
-                      style: TextStyle(color: MyColors.textMain),
-                    ),
-                    leading: Icon(
-                      Icons.check,
-                      color: MyColors.pallete4,
-                    ),
-                    trailing: IconButton(
-                      icon: Icon(
-                        Icons.delete,
-                        color: MyColors.pallete4,
-                      ),
-                      onPressed: () {
-                        this.index = index;
-                        _showConfirmationDialog();
-                      },
+      body: moments.isEmpty
+          ? Center(
+              child: Text(
+                'No moments to display.',
+                style: TextStyle(color: MyColors.textMain),
+              ),
+            )
+          : ListView.builder(
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 1, horizontal: 4),
+                  child: Card(
+                    color: MyColors.pallete1,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        ListTile(
+                          style: ListTileStyle.list,
+                          onTap: () {
+                            Navigator.pushNamed(context, '/detailMoment',
+                                arguments: {'moment': moments[index]});
+                          },
+                          title: Text(
+                            moments[index].title,
+                            style: TextStyle(color: MyColors.textMain),
+                          ),
+                          subtitle: Text(
+                            moments[index].description,
+                            style: TextStyle(color: MyColors.textMain),
+                          ),
+                          leading: Icon(
+                            Icons.check,
+                            color: MyColors.pallete4,
+                          ),
+                          trailing: IconButton(
+                            icon: Icon(
+                              Icons.delete,
+                              color: MyColors.pallete4,
+                            ),
+                            onPressed: () {
+                              this.index = index;
+                              _showConfirmationDialog();
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                );
+              },
+              itemCount: moments.length,
             ),
-          );
-        },
-        itemCount: moments.length,
-      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: MyColors.pallete2,
         child: Icon(
@@ -166,9 +176,9 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void _deleteMoment() {
-    // Implement your save logic here
-    momentBox.delete(moments[index].id);
+  void _deleteMoment() async {
+    // Implement your delete logic here using the DatabaseHelper
+    await databaseHelper.deleteMoment(moments[index].id);
     _loadData();
   }
 }

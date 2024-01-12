@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:uuid/uuid.dart';
+import '../database/sqflite_database.dart';
 import '../util/my_colors.dart';
 import 'package:moment/model/moment.dart';
-
-import 'package:hive_flutter/hive_flutter.dart';
-import '../database/boxes.dart';
 
 class NewMoment extends StatefulWidget {
   const NewMoment({super.key});
@@ -13,7 +13,7 @@ class NewMoment extends StatefulWidget {
 }
 
 class _NewMomentState extends State<NewMoment> {
-  Box<Moment> momentBox = Boxes.getMomentBox();
+  late DatabaseHelper databaseHelper;
   late Moment moment;
   DateTime date = DateTime.now();
   String title = "";
@@ -22,6 +22,17 @@ class _NewMomentState extends State<NewMoment> {
   @override
   void initState() {
     super.initState();
+    databaseHelper = DatabaseHelper(); // Initialize your database helper
+  }
+
+  Future<void> initializeDatabase() async {
+    // Initialize the database here (use your own database helper class)
+    // Example: databaseHelper = DatabaseHelper();
+    // db = await databaseHelper.database;
+
+    // Replace the above line with your actual initialization logic
+    // databaseHelper should be an instance of your database helper class
+    // that creates and manages the SQLite database.
   }
 
   @override
@@ -252,15 +263,33 @@ class _NewMomentState extends State<NewMoment> {
     return wantToPop;
   }
 
-  void _saveChanges() {
+  Future<void> _saveChanges() async {
     // Implement your save logic here
     moment = Moment(
-      title: title,
-      latestUpdate: date,
-      description: description,
-      dateList: [date],
-    );
-    momentBox.put(moment.id, moment);
-    Navigator.pop(context, null);
+        title: title,
+        latestUpdate: date,
+        description: description,
+        dateList: [date],
+        type: 'HISTORY',
+        id: Uuid().v4());
+
+    print("MOMENT TO BE SAVED: ${moment.toString()}");
+
+    int result = await databaseHelper.insertMoment(moment);
+    print("IS MOMENT SAVED? $result");
+
+    if (result != 0) {
+      final snackBar = SnackBar(
+          content: Text("Insert Moment Completed..."),
+          duration: Duration(seconds: 2));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      // Insert successful, you can navigate back or perform other actions
+      Navigator.pop(context, null);
+    } else {
+      final snackBar = SnackBar(
+          content: Text("Error Inserting Moment..."),
+          duration: Duration(seconds: 2));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 }

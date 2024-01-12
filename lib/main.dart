@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:moment/database/boxes.dart';
+import 'package:moment/database/sqflite_database.dart';
 import 'package:moment/pages/detail_moment.dart';
 import 'package:moment/pages/home.dart';
 import 'package:moment/pages/new_moment.dart';
+import 'package:sqflite/sqflite.dart';
 
 import 'pages/about.dart';
 
 void main() async {
-  // Init Hive
-  await Boxes.init();
+  WidgetsFlutterBinding
+      .ensureInitialized(); // Ensure Flutter services are initialized
+
+  // Instantiate the DatabaseHelper class
+  DatabaseHelper databaseHelper = DatabaseHelper();
+
+  // Get a reference to the database
+  await databaseHelper.database;
 
   runApp(MaterialApp(
     initialRoute: '/home',

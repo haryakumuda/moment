@@ -30,14 +30,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
   path_provider: ^2.1.1
   uuid: ^4.2.2
   intl: ^0.18.1
   flutter_heatmap_calendar: ^1.0.5
   package_info_plus: ^5.0.1
   flutter_launcher_icons: ^0.13.1
+  sqflite: ^2.3.0
 
 
   # The following adds the Cupertino Icons font to your application.

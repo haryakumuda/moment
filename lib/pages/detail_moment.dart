@@ -1,12 +1,8 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
-
-import 'package:hive/hive.dart';
-import 'package:intl/intl.dart';
-
-import '../database/boxes.dart';
+import 'package:intl/intl.dart'; // Import your Sqflite database helper
+import '../database/sqflite_database.dart';
 import '../model/moment.dart';
 import '../util/my_colors.dart';
 
@@ -19,7 +15,7 @@ class DetailMoment extends StatefulWidget {
 
 class _DetailMomentState extends State<DetailMoment>
     with TickerProviderStateMixin {
-  Box<Moment> momentBox = Boxes.getMomentBox();
+  late DatabaseHelper databaseHelper; // Add this line
   late Moment moment;
   Timer? timer;
   Moment? receivedMoment;
@@ -31,8 +27,9 @@ class _DetailMomentState extends State<DetailMoment>
 
   @override
   void initState() {
-    print('INITSTATE IS STARTING');
     super.initState();
+    databaseHelper = DatabaseHelper(); // Initialize your database helper
+
     timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
       if (mounted) {
         setState(() {
@@ -330,7 +327,7 @@ class _DetailMomentState extends State<DetailMoment>
     // Implement your save logic here
     receivedMoment?.latestUpdate = DateTime.now();
     receivedMoment?.dateList.add(DateTime.now());
-    momentBox.put(receivedMoment?.id, receivedMoment!);
+    databaseHelper.updateMoment(receivedMoment!); // Use the update method
   }
 
   Map<DateTime, int> mapDateTimeColor(List<DateTime> dateTime) {
